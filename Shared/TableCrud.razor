@@ -1,0 +1,44 @@
+@using Data
+
+<div class="row" style="margin:25px; margin-top:100px;">
+
+    <strong>Post, Put and Delete Operations Table Data</strong><hr />
+    @if (CRUDUsers != null)
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Full Name</th>
+                    <th>Job</th>
+                    <th>Created Timestamp</th>
+                    <th>Updated Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in CRUDUsers)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Name</td>
+                        <td>@user.Job</td>
+                        <td>@user.CreatedTimestamp</td>
+                        <td>@user.UpdatedTimestamp</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @if (!CRUDUsers.Any())
+    {
+        <div class="justify-content-center">
+            <h5>No records to show</h5>
+        </div>
+    }
+</div>
+
+@code {
+    // Demonstrates how a parent component can supply parameters
+    [Parameter]
+    public List<CRUDUser> CRUDUsers { get; set; }
+}

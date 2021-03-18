@@ -1,0 +1,53 @@
+@inject HttpClient client
+
+@using Newtonsoft.Json
+using System.Collections.Generic;
+@using Data
+
+<div class="row" style="border:3px solid black;margin:20px;">
+    <EditForm Model="@crudUser">
+        <div class="row form-inline" style="margin:20px;">
+            <div class="form-group" style="margin:20px;">
+                <label for="Name" style="margin:10px;">Name</label>
+                <InputText Id="Name" @bind-Value="@crudUser.Name"></InputText>
+            </div>
+            <div class="form-group" style="margin:20px;">
+                <label for="Job" style="margin:10px;">Job Description</label>
+                <InputText Id="Job" @bind-Value="@crudUser.Job"></InputText>
+            </div>
+
+            <button class="btn btn-success" @onclick="@CreateNewUser">Create</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public List<CRUDUser> CRUDUsers { get; set; }
+
+    [Parameter]
+    public EventCallback<T> fnNewUser { get; set; }
+
+    CRUDUser crudUser = new CRUDUser();
+
+    private async Task CreateNewUser()
+    {
+        string apiName = "api/users";
+        var postData = JsonConvert.SerializeObject(crudUser);
+        var response = await client.PostAsync(apiName, new StringContent(postData));
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            CRUDUser user = JsonConvert.DeserializeObject<CRUDUser>(await response.Content.ReadAsStringAsync());
+            if (user != null)
+            {
+                user.Name = crudUser.Name;
+                user.Job = crudUser.Job;
+                CRUDUsers.Add(user);
+                await fnNewUser.InvokeAsync(CRUDUsers);
+                crudUser = new CRUDUser();
+            }
+        }
+    }
+}

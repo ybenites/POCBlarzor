@@ -1,0 +1,17 @@
+@page "/crud"
+@inject HttpClient client
+
+@using Newtonsoft.Json
+@using Data
+
+@* <TableCrud CRUDUsers=@CRUDUsers></TableCrud> *@
+
+<CreateUser @bind-fnNewUser=CRUDUsers ></CreateUser>
+
+@code {
+    List<CRUDUser> CRUDUsers = new List<CRUDUser>();
+    CRUDUser crudUser = new CRUDUser();
+    
+
+
+}
