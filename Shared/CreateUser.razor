@@ -1,4 +1,4 @@
-@inject HttpClient client
+@inject IHttpClientFactory httpClientFactory
 
 @using Newtonsoft.Json
 @using Data
@@ -26,7 +26,7 @@
 
     [Parameter]
     public EventCallback<List<CRUDUser>> FnNewUserChanged { get; set; }
-    
+
     List<CRUDUser> CRUDUsers = new List<CRUDUser>();
 
     CRUDUser crudUser = new CRUDUser();
@@ -35,6 +35,7 @@
     {
         string apiName = "api/users";
         var postData = JsonConvert.SerializeObject(crudUser);
+        var client = httpClientFactory.CreateClient("ClientBlazor");
         var response = await client.PostAsync(apiName, new StringContent(postData));
 
         if (response.IsSuccessStatusCode)

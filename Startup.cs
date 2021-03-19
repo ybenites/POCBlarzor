@@ -29,9 +29,14 @@ namespace BlazorApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddScoped<HttpClient>(s =>
+            //services.AddScoped<HttpClient>(s =>
+            //{
+            //    return new HttpClient { BaseAddress = new Uri(@"https://reqres.in/") };
+            //});
+
+            services.AddHttpClient("ClientBlazor", s =>
             {
-                return new HttpClient { BaseAddress = new Uri(@"https://reqres.in/") };
+                s.BaseAddress = new Uri(@"https://reqres.in/");
             });
         }
 
