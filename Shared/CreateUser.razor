@@ -1,7 +1,6 @@
 @inject HttpClient client
 
 @using Newtonsoft.Json
-using System.Collections.Generic;
 @using Data
 
 <div class="row" style="border:3px solid black;margin:20px;">
@@ -23,10 +22,12 @@ using System.Collections.Generic;
 
 @code {
     [Parameter]
-    public List<CRUDUser> CRUDUsers { get; set; }
+    public List<CRUDUser> FnNewUser { get; set; }
 
     [Parameter]
-    public EventCallback<T> fnNewUser { get; set; }
+    public EventCallback<List<CRUDUser>> FnNewUserChanged { get; set; }
+    
+    List<CRUDUser> CRUDUsers = new List<CRUDUser>();
 
     CRUDUser crudUser = new CRUDUser();
 
@@ -44,8 +45,8 @@ using System.Collections.Generic;
             {
                 user.Name = crudUser.Name;
                 user.Job = crudUser.Job;
-                CRUDUsers.Add(user);
-                await fnNewUser.InvokeAsync(CRUDUsers);
+                FnNewUser.Add(user);
+                await FnNewUserChanged.InvokeAsync(FnNewUser);
                 crudUser = new CRUDUser();
             }
         }
