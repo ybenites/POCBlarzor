@@ -1,24 +1,24 @@
-using Newtonsoft.Json;
-using System;
+
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace BlazorApp.Data
 {
     public class Response
     {
-        [JsonProperty("page")]
+        [JsonPropertyNameAttribute("page")]
         public int Page { get; set; }
 
-        [JsonProperty("per_page")]
+        [JsonPropertyNameAttribute("per_page")]
         public int PerPage { get; set; }
 
-        [JsonProperty("total")]
+        [JsonPropertyNameAttribute("total")]
         public int Total { get; set; }
 
-        [JsonProperty("total_pages")]
+        [JsonPropertyNameAttribute("total_pages")]
         public int TotalPages { get; set; }
 
-        [JsonProperty("data")]
+        [JsonPropertyNameAttribute("data")]
         public List<User> Users { get; set; }
     }
 }

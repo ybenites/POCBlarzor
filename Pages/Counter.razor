@@ -1,16 +1,50 @@
 @page "/counter"
 
+@inject BlazorApp.Stores.CounterStore.CounterStore CounterStore;
+@inject BlazorApp.Stores.CounterStoreState.ICounterState CounterState;
+
+@implements IDisposable
+
 <h1>Counter</h1>
 
-<p>Current count: @currentCount</p>
+@*<p>Current count: @currentCount</p>*@
+<p>Current count: @CounterStore.GetState().Count</p>
+
+<p>Current count2: @CounterState.Counter </p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-    private int currentCount = 0;
+    //private int currentCount = 0;
+
+    private async Task CounterState_StateChanged(ComponentBase source, string property)
+    {
+        if(source != this){
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //example 1
+        CounterStore.AddStateChangeListeners(() => { StateHasChanged(); });
+        // example 2
+        CounterState.StateChanged += async(Source, Property)
+            => await CounterState_StateChanged(Source, Property);
+    }
 
     private void IncrementCount()
     {
-        currentCount++;
+
+        //currentCount++;
+        CounterState.UpdateCounter(this, CounterState.Counter+1);
+        CounterStore.IncrementCount();
+    }
+
+    void IDisposable.Dispose()
+    {
+        CounterState.StateChanged -= async (Source, Property)
+            => await CounterState_StateChanged(Source, Property);
     }
 }

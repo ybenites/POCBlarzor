@@ -1,0 +1,24 @@
+﻿@page "/button-telerik"
+
+<TelerikButton OnClick="@MyClickHandler">Click me!</TelerikButton>
+@thankYouString
+
+<h4 class="Testing">Styled Buttons</h4>
+
+<TelerikButton Primary="true">Primary Button</TelerikButton>
+
+<div>
+    <TelerikButton Class="RedText">Red Text Button</TelerikButton>
+</div>
+
+<h4>Buttons with icons</h4>
+
+<div>
+    <TelerikButton SpriteClass="k-icon netherlandsFlag">Sprite</TelerikButton>
+</div>
+<TelerikButton Icon="filter">Icon</TelerikButton>
+<TelerikButton ImageUrl="https://demos.telerik.com/kendo-ui/content/shared/icons/sports/snowboarding.png">Image Url</TelerikButton>
+
+<h4>Disabled Button</h4>
+
+<TelerikButton Enabled="false">Disabled Button</TelerikButton>

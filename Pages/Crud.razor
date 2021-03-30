@@ -1,13 +1,28 @@
 @page "/crud"
 @inject HttpClient client
+@inject IJSRuntime js
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 @using Data
 
+<CreateUser @bind-FnNewUser="@CRUDUsers"></CreateUser>
 <TableCrud CRUDUsers="@CRUDUsers"></TableCrud>
 
-<CreateUser @bind-FnNewUser="@CRUDUsers" ></CreateUser>
-
 @code {
+    string keyListUsers = "keyListUsers";
     List<CRUDUser> CRUDUsers = new List<CRUDUser>();
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            //var value = await js.InvokeAsync<List<CRUDUser>>("getFromLocalStorage", keyListUsers);
+            List<CRUDUser> value = await localStorage.GetItemAsync<List<CRUDUser>>(keyListUsers);
+            if (value != null)
+            {
+                CRUDUsers = value;
+                StateHasChanged();
+            }
+        }
+    }
 }

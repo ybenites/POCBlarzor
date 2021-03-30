@@ -1,7 +1,6 @@
 @inject IHttpClientFactory httpClientFactory
-
-@using Newtonsoft.Json
-@using Data
+@inject IJSRuntime js
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <div class="row" style="border:3px solid black;margin:20px;">
     <EditForm Model="@crudUser">
@@ -19,37 +18,3 @@
         </div>
     </EditForm>
 </div>
-
-@code {
-    [Parameter]
-    public List<CRUDUser> FnNewUser { get; set; }
-
-    [Parameter]
-    public EventCallback<List<CRUDUser>> FnNewUserChanged { get; set; }
-
-    List<CRUDUser> CRUDUsers = new List<CRUDUser>();
-
-    CRUDUser crudUser = new CRUDUser();
-
-    private async Task CreateNewUser()
-    {
-        string apiName = "api/users";
-        var postData = JsonConvert.SerializeObject(crudUser);
-        var client = httpClientFactory.CreateClient("ClientBlazor");
-        var response = await client.PostAsync(apiName, new StringContent(postData));
-
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            CRUDUser user = JsonConvert.DeserializeObject<CRUDUser>(await response.Content.ReadAsStringAsync());
-            if (user != null)
-            {
-                user.Name = crudUser.Name;
-                user.Job = crudUser.Job;
-                FnNewUser.Add(user);
-                await FnNewUserChanged.InvokeAsync(FnNewUser);
-                crudUser = new CRUDUser();
-            }
-        }
-    }
-}

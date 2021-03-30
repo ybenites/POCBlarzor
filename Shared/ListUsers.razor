@@ -1,43 +1,91 @@
 @using Data
 
 <div class="row" style="margin:25px;">
-        <strong>Get List </strong><hr />
-        @if (Users != null)
-        {
-            <table class="table table-bordered table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Avatar</th>
+    <strong>Get List </strong><hr />
+    <div class="col-12" style="position: relative;min-height: 400px;">
+        <TelerikLoaderContainer OverlayThemeColor="light" Visible="@( !IsInitialDataLoadComplete )"
+                                Text="@null" Class="initial-data-loader">
+            <Template>
+                <TelerikLoader Type="@LoaderType.InfiniteSpinner" Size="@LoaderSize.Large"></TelerikLoader>
+            </Template>
+        </TelerikLoaderContainer>
+
+        <TelerikGrid Data=@Users EditMode="@GridEditMode.Inline"
+                     Pageable="true" PageSize=@PageSize Resizable="true"
+                     FilterMode="@GridFilterMode.FilterMenu" Sortable="true"
+                      TotalCount="@Total">
+            <GridToolBar>
+                <GridCommandButton Command="Add" Icon="add">Add Product</GridCommandButton>
+            </GridToolBar>
+            <GridColumns>
+                <GridColumn Field=@nameof(User.Id)  Editable="false" />
+                <GridColumn Field=@nameof(User.FirstName)  />
+                <GridColumn Field=@nameof(User.LastName)  Title="Weight" />
+                <GridColumn Field=@nameof(User.Email)  Title="Size" />
+                <GridColumn   Title="Size" >
+                    <Template>
+                        @{
+                            var product = context as User;                           
+                            <img src="@product.AvatarURI" width="30" height="30" alt="testing" />
+                        }
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </TelerikGrid>
+    </div>
+    <hr />
+    @if (Users != null)
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Avatar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Users)
+                {
+                    <tr class="justify-content-center">
+                        <td>@user.Id</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.Email</td>
+                        <td><img src="@user.AvatarURI" height="30" width="30" /></td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Users)
-                    {
-                        <tr class="justify-content-center">
-                            <td>@user.Id</td>
-                            <td>@user.FirstName</td>
-                            <td>@user.LastName</td>
-                            <td>@user.Email</td>
-                            <td><img src="@user.AvatarURI" height="30" width="30" /></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        @if (!Users.Any())
-        {
-            <div class="justify-content-center">
-                <h5>No records to show</h5>
-            </div>
-        }
+                }
+            </tbody>
+        </table>
+    }
+    @if (!Users.Any())
+    {
+        <div class="justify-content-center">
+            <h5>No records to show</h5>
+        </div>
+    }
 </div>
 
 @code {
+    int PageSize = 10;
+    int Total { get; set; }
+
     // Demonstrates how a parent component can supply parameters
     [Parameter]
     public List<User> Users { get; set; }
+
+    [Parameter]
+    public bool IsInitialDataLoadComplete { get; set; }
 }
+
+<style>
+    .initial-data-loader .k-loader-container-overlay.k-overlay-light {
+        background-color: white;
+    }
+
+    .k-loader-container {
+        z-index: 100;
+    }
+</style>

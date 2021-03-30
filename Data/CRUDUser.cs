@@ -1,24 +1,23 @@
-using Newtonsoft.Json;
 using System;
-
+using System.Text.Json.Serialization;
 
 namespace BlazorApp.Data
 {
     public class CRUDUser
     {
-        [JsonProperty("id")]
+        [JsonPropertyNameAttribute("id"), JsonNumberHandlingAttribute(JsonNumberHandling.AllowReadingFromString)]
         public int Id { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyNameAttribute("name")]
         public string Name { get; set; }
 
-        [JsonProperty("job")]
+        [JsonPropertyNameAttribute("job")]
         public string Job { get; set; }
 
-        [JsonProperty("createdAt")]
+        [JsonPropertyNameAttribute("createdAt")]
         public DateTime CreatedTimestamp { get; set; }
 
-        [JsonProperty("updatedAt")]
+        [JsonPropertyNameAttribute("updatedAt")]
         public DateTime UpdatedTimestamp { get; set; }
     }
 }

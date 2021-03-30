@@ -10,6 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorApp.Data;
 using System.Net.Http;
+using Blazored.LocalStorage;
+using BlazorApp.Stores;
+using BlazorApp.Stores.CounterStore;
+using BlazorApp.Stores.CounterStoreState;
 
 namespace BlazorApp
 {
@@ -29,6 +33,12 @@ namespace BlazorApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+
+            // state mamagement
+            services.AddScoped<CounterStore>();
+            services.AddScoped<ICounterState, Stores.CounterStoreState.CounterState>();
+
+            services.AddBlazoredLocalStorage();
             //services.AddScoped<HttpClient>(s =>
             //{
             //    return new HttpClient { BaseAddress = new Uri(@"https://reqres.in/") };
@@ -38,6 +48,8 @@ namespace BlazorApp
             {
                 s.BaseAddress = new Uri(@"https://reqres.in/");
             });
+
+            services.AddTelerikBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

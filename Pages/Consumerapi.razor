@@ -2,7 +2,6 @@
 
 @inject IHttpClientFactory httpClientFactory
 
-@using Newtonsoft.Json
 @using Data
 
 
@@ -11,16 +10,17 @@
     <div class="row justify-content-center" style="margin-bottom:50px">
         <h3 class="text-center">Consume REST-API</h3>
     </div>
-    
-    <ListUsers Users=@Users ></ListUsers>
+
+    <ListUsers Users="@Users" IsInitialDataLoadComplete="@IsInitialDataLoadComplete"></ListUsers>
 </div>
 
 @code {
     List<User> Users = new List<User>();
+    bool IsInitialDataLoadComplete { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         var apiName = "api/users";
 
         var client = httpClientFactory.CreateClient("ClientBlazor");
@@ -28,8 +28,10 @@
 
         if (httpResponse.IsSuccessStatusCode)
         {
-            Response responseData = JsonConvert.DeserializeObject<Response>(await httpResponse.Content.ReadAsStringAsync());
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var responseData = System.Text.Json.JsonSerializer.Deserialize<Response>(content);
             Users = responseData.Users;
+            IsInitialDataLoadComplete = true;
             StateHasChanged();
         }
     }
